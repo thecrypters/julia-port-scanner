@@ -61,18 +61,18 @@ function scan()
     @sync for port = start:finish
         @async begin
             try
-                socket = Sockets.connect(target, port)
+                @show socket = Sockets.connect(target, port)
                 push!(ports, port => "OPEN")
                 open_count += 1
                 close(socket)
             catch e
                 if isa(e, Base.IOError)
-                # Closed port
+                    # Closed port
                     if occursin(CLOSED_MSG, e.msg)
                         push!(ports, port => "CLOSED")
                         closed_count += 1
                     end
-                # Filtered port
+                    # Filtered port
                     if occursin(RESET_MSG, e.msg)
                         push!(ports, port => "FILTERED")
                         filtered_count += 1
@@ -82,6 +82,10 @@ function scan()
         end
     end
     elapsed_time = time() - start_time
+    if (open_count + closed_count + filtered_count) == 0
+        print("Looks like the host is down :(\n\n")
+        exit(0)
+    end
     print("TCP port scanning complete!\n")
     print("$open_count open ports, $closed_count closed and $filtered_count filtered\n")
     print_results(ports, only_open)
