@@ -58,23 +58,25 @@ function scan()
     filtered_count = 0
     print("Running port scanning for $target\n\n")
     start_time = time()
-    for port = start:finish
-        try
-            socket = Sockets.connect(target, port)
-            push!(ports, port => "OPEN")
-            open_count += 1
-            close(socket)
-        catch e
-            if isa(e, Base.IOError)
+    @sync for port = start:finish
+        @async begin
+            try
+                socket = Sockets.connect(target, port)
+                push!(ports, port => "OPEN")
+                open_count += 1
+                close(socket)
+            catch e
+                if isa(e, Base.IOError)
                 # Closed port
-                if occursin(CLOSED_MSG, e.msg)
-                    push!(ports, port => "CLOSED")
-                    closed_count += 1
-                end
+                    if occursin(CLOSED_MSG, e.msg)
+                        push!(ports, port => "CLOSED")
+                        closed_count += 1
+                    end
                 # Filtered port
-                if occursin(RESET_MSG, e.msg)
-                    push!(ports, port => "FILTERED")
-                    filtered_count += 1
+                    if occursin(RESET_MSG, e.msg)
+                        push!(ports, port => "FILTERED")
+                        filtered_count += 1
+                    end
                 end
             end
         end
