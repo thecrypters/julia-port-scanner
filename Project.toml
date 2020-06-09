@@ -1,0 +1,8 @@
+name = "portScanner"
+uuid = "45b2d4fd-bd20-43b7-ab06-2907c8f2f63c"
+authors = ["TheCrypters"]
+version = "1.0.0"
+
+[deps]
+ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
+DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
