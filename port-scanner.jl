@@ -61,7 +61,7 @@ function scan()
     @sync for port = start:finish
         @async begin
             try
-                @show socket = Sockets.connect(target, port)
+                socket = Sockets.connect(target, port)
                 push!(ports, port => "OPEN")
                 open_count += 1
                 close(socket)
