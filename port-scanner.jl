@@ -89,7 +89,7 @@ function scan()
     print("TCP port scanning complete!\n")
     print("$open_count open ports, $closed_count closed and $filtered_count filtered\n")
     print_results(ports, only_open)
-    print("\nFinished in $elapsed_time seconds")
+    println("\nFinished in $elapsed_time seconds")
 end
 
 # Start scanning
